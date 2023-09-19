@@ -34,3 +34,11 @@
 20230918	19:26:36	c4592682-64f2-4e78-870f-93406fdf8691	POST	undefined	/auth
 20230918	19:26:46	e3e21d1b-38ce-48c1-af07-2b7d51e4b22a	DELETE	undefined	/employees
 20230918	19:27:01	5f923a5d-c337-4281-abe4-f431b8c62064	GET	undefined	/employees
+20230918	22:33:59	1f0cdbea-e5d7-4b02-a286-afc307c3c0e0	GET	undefined	/
+20230918	22:33:59	fbeb4342-e13a-40ed-96f9-3a763f2b2b21	GET	undefined	/css/style.css
+20230918	22:33:59	3ea8ef6b-c298-4caf-b4af-620788e71ee5	GET	undefined	/favicon.ico
+20230918	22:34:25	83960cc5-951f-4bb0-9686-02dcb47ca61d	GET	undefined	/css/style.css
+20230918	22:35:33	9105fcae-fb11-45b1-8dd6-258d546ca3f5	POST	http://localhost:3500	/localhost:3500/upload
+20230918	22:36:50	794b243e-9d41-44ad-a0b9-e20394b02bdd	POST	http://localhost:3500	/localhost:3500/upload
+20230918	22:36:54	3ff7d7f2-f696-4923-a033-31dd91866feb	POST	http://localhost:3500	/localhost:3500/upload
+20230918	22:37:38	7ef395de-46c8-4068-b587-c34f3681778f	POST	http://localhost:3500	/localhost:3500/upload

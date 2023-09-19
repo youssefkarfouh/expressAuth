@@ -4,14 +4,17 @@ const app = express();
 const path = require('path');
 const cors = require('cors');
 const corsOptions = require('./config/corsOptions');
+const connectDb = require('./config/dbCoon');
+
 const { logger } = require('./middleware/logEvents');
 const errorHandler = require('./middleware/errorHandler');
 const verifyJWT = require('./middleware/verifyJWT');
-const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
+
+const cookieParser = require('cookie-parser');
 const PORT = process.env.PORT || 3500;
 const mongoose = require('mongoose');
-const connectDb = require('./config/dbCoon');
+const fileUpload = require('express-fileupload');
 
 
 // Connect to mongo db 
@@ -45,7 +48,19 @@ app.use('/auth', require('./routes/auth'));
 app.use('/refresh', require('./routes/refresh'));
 app.use('/logout', require('./routes/logout'));
 
-app.use(verifyJWT);
+// test upload files
+
+app.post('/upload',
+    fileUpload({ createParentPath: true }),
+    (req, res) => {
+        const files = req.files;
+        console.log(files)
+
+        return res.json({ status: 'logged', message: 'logged' });
+    }
+)
+
+// app.use(verifyJWT);
 app.use('/employees', require('./routes/api/employees'));
 
 app.all('*', (req, res) => {
@@ -62,7 +77,7 @@ app.all('*', (req, res) => {
 app.use(errorHandler);
 
 
-mongoose.connection.once('open' , ()=>{
+mongoose.connection.once('open', () => {
     console.log('Connected to mongo');
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 })
