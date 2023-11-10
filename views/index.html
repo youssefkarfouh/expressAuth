@@ -22,16 +22,17 @@
         const form = document.getElementById('uploadForm');
 
         const sendFiles = async () => {
-            const myFiles = document.getElementById("myFiles");
+            const myFiles = document.getElementById("myFiles").files;
             const formData = new FormData();
 
-            console.log("myFiles" , myFiles);
-            
-            Object.keys(myFiles).forEach(key => {
+            console.log("myFiles", myFiles);
+            console.log("Object.keys(myFiles)", Object.keys(myFiles));
+
+            Object.keys(myFiles).map(key => {
                 formData.append(myFiles.item(key).name, myFiles.item(key))
             })
 
-            const response = await fetch('http:localhost:3500/upload', {
+            const response = await fetch('/upload', {
                 method: 'POST',
                 body: formData,
             })
@@ -42,14 +43,13 @@
             h2.textContent = `Status ${json?.status}`;
 
             const h3 = document.querySelector('h3');
-            h2.textContent = json?.message;
+            h3.textContent = json?.message;
             console.log(json);
 
         }
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-
             sendFiles();
         })
     </script>

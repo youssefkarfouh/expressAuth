@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
+
 const corsOptions = require('./config/corsOptions');
 const connectDb = require('./config/dbCoon');
 
@@ -10,8 +12,10 @@ const { logger } = require('./middleware/logEvents');
 const errorHandler = require('./middleware/errorHandler');
 const verifyJWT = require('./middleware/verifyJWT');
 const credentials = require('./middleware/credentials');
+const filesMissing = require('./middleware/filesMissing')
+const filesSizeLimit = require('./middleware/fileSizeLimit')
+const filesExtLimite = require('./middleware/filesExtLimiter')
 
-const cookieParser = require('cookie-parser');
 const PORT = process.env.PORT || 3500;
 const mongoose = require('mongoose');
 const fileUpload = require('express-fileupload');
@@ -48,19 +52,30 @@ app.use('/auth', require('./routes/auth'));
 app.use('/refresh', require('./routes/refresh'));
 app.use('/logout', require('./routes/logout'));
 
+
 // test upload files
 
 app.post('/upload',
     fileUpload({ createParentPath: true }),
+    filesMissing,
+    filesSizeLimit,
+    filesExtLimite(['.png', '.jpg', '.jpeg']),
     (req, res) => {
         const files = req.files;
-        console.log(files)
 
-        return res.json({ status: 'logged', message: 'logged' });
+        Object.keys(files).forEach(key => {
+
+            const filePath = path.join(__dirname, 'files', files[key].name)
+            files[key].mv(filePath, (err => {
+                if (err) return res.status(500).json({ status: "error", message: err })
+            }))
+        })
+
+        return res.json({ status: 'success', message: Object.keys(files).toString() });
     }
 )
 
-// app.use(verifyJWT);
+app.use(verifyJWT);
 app.use('/employees', require('./routes/api/employees'));
 
 app.all('*', (req, res) => {
@@ -75,7 +90,6 @@ app.all('*', (req, res) => {
 });
 
 app.use(errorHandler);
-
 
 mongoose.connection.once('open', () => {
     console.log('Connected to mongo');
