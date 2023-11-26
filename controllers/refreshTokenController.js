@@ -1,5 +1,6 @@
 
 const jwt = require('jsonwebtoken');
+const User = require('../model/User');
 
 const handleRefreshToken = async (req, res) => {
     const cookies = req.cookies;
@@ -24,7 +25,7 @@ const handleRefreshToken = async (req, res) => {
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '1d' }
+                { expiresIn: '15s' }
             );
             res.json({ accessToken })
         }
