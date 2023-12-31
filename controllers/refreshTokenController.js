@@ -4,7 +4,7 @@ const User = require('../model/User');
 
 const handleRefreshToken = async (req, res) => {
     const cookies = req.cookies;
-    if (!cookies?.jwt) return res.sendStatus(401);
+    if (!cookies?.jwt) return res.status(401).json({ message: 'refresh token not exist', status: 'error' });
     const refreshToken = cookies.jwt;
 
     const foundUser = await User.findOne({ refreshToken }).exec();
@@ -15,8 +15,11 @@ const handleRefreshToken = async (req, res) => {
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
         (err, decoded) => {
-            if (err || foundUser.username !== decoded.username) return res.sendStatus(403);
+            if (err || foundUser.username !== decoded.username) {
+                return res.status(430).json({ message: err, status: 'forbidden' })
+            }
             const roles = Object.values(foundUser.roles);
+            const user = decoded.username
             const accessToken = jwt.sign(
                 {
                     "UserInfo": {
@@ -25,9 +28,9 @@ const handleRefreshToken = async (req, res) => {
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '15s' }
+                { expiresIn: '10s' }
             );
-            res.json({ accessToken })
+            res.json({ user , roles, accessToken })
         }
     );
 }

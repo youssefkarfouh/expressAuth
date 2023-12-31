@@ -16,8 +16,6 @@ const handleLogin = async (req, res) => {
     if (match) {
         const roles = foundUser.roles;
 
-        console.log("roles =>", roles);
-
         // create JWTs
         const accessToken = jwt.sign(
             {
@@ -32,7 +30,7 @@ const handleLogin = async (req, res) => {
         const refreshToken = jwt.sign(
             { "username": foundUser.username },
             process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: '30s' }
+            { expiresIn: '20s' }
         );
 
         // Saving refreshToken with current user in db
@@ -41,7 +39,7 @@ const handleLogin = async (req, res) => {
 
         res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 24 * 60 * 60 * 1000 });
         res.json({ roles, accessToken });
-    } else {
+    } else { 
         res.sendStatus(401);
     }
 }
