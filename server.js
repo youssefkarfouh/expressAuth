@@ -55,29 +55,33 @@ app.use('/logout', require('./routes/logout'));
 
 // test upload files
 
-app.post('/upload',
-    fileUpload({ createParentPath: true }),
-    filesMissing,
-    filesSizeLimit,
-    filesExtLimite(['.png', '.jpg', '.jpeg']),
-    (req, res) => {
-        const files = req.files;
+// app.post('/upload',
+//     fileUpload({ createParentPath: true }),
+//     filesMissing,
+//     filesSizeLimit,
+//     filesExtLimite(['.png', '.jpg', '.jpeg']),
+//     (req, res) => {
+//         const files = req.files;
 
-        Object.keys(files).forEach(key => {
+//         Object.keys(files).forEach(key => {
 
-            const filePath = path.join(__dirname, 'files', files[key].name)
-            files[key].mv(filePath, (err => {
-                if (err) return res.status(500).json({ status: "error", message: err })
-            }))
-        })
+//             const filePath = path.join(__dirname, 'files', files[key].name)
+//             files[key].mv(filePath, (err => {
+//                 if (err) return res.status(500).json({ status: "error", message: err })
+//             }))
+//         })
 
-        return res.json({ status: 'success', message: Object.keys(files).toString() });
-    }
-)
+//         return res.json({ status: 'success', message: Object.keys(files).toString() });
+//     }
+// )
 
+
+// these below apis need auth
 app.use(verifyJWT);
 
-app.use('/employees', require('./routes/api/employees'));
+app.use('/recipes', require('./routes/recipe'));
+
+// app.use('/employees', require('./routes/employees'));
 
 app.all('*', (req, res) => {
     res.status(404);
